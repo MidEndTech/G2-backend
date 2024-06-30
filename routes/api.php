@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\Logincontroller;
+use App\Http\Controllers\Api\Registercontroller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserAuthController;
@@ -15,9 +17,10 @@ use App\Http\Controllers\UserAuthController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+Route::post('register',[Registercontroller::class,'register']);
+Route::post('login', [Logincontroller::class , 'login']);
 
-Route::post('register', [UserAuthController::class , 'register']);
 
-});
