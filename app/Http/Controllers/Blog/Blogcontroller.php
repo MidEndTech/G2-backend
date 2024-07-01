@@ -20,7 +20,7 @@ class Blogcontroller extends Controller
     public function store(Request $request)
     {
 
-        $blogData = $request->validate([
+        $request->validate([
             'subject' => 'required',
             'content' => 'required'
         ]);
@@ -33,14 +33,56 @@ class Blogcontroller extends Controller
             'content' => $request->content
         ]);
 
-
-
         return response()->json([
             'message' => 'the blog created sucssefuly!',
             'data' => $blog
         ], 201);
     }
 
+
+    public function edit(Request $request, $id)
+    {
+        $blogData = $request->validate([
+            'subject' => 'required',
+            'content' => 'required'
+        ]);
+
+
+        $userId = auth()->id();
+        $blog = Blog::where('id', $id)->where('user_id', $userId)->first();
+
+        if (!$blog) {
+            return response()->json(['Not Found'], 404);
+        }
+
+        $blog->update($blogData);
+
+
+        return response()->json([
+            'data' => $blog,
+            'message' => 'the blog apdeated sucssefuly!'
+        ]);
+    }
+
+
+    public function delete($id)
+    {
+
+        $userId = auth()->id();
+        $blog = Blog::where('id', $id)->where('user_id', $userId)->first();
+
+        if (!$blog) {
+            return response()->json(['Not Found'], 404);
+        }
+
+        $blog->delete();
+        return response()->json([
+            'message' => 'the blog deleted sucssefuly!'
+        ]);
+    }
+
+
+    
     // show a specific blog post belonging to a user
     public function show($id)
     {
@@ -57,33 +99,4 @@ class Blogcontroller extends Controller
             'data' => $blog,
         ]);
     }
-
-
-
-    public function edit(Request $request, $id)
-    {
-        $blogData= $request->validate([
-            'subject' => 'required',
-            'content' => 'required'
-        ]);
-
-
-        $userId = auth()->id();
-        $blog = Blog::where('id', $id)->where('user_id', $userId)->first();
-
-        if (!$blog) {
-            return response()->json(['Not Found'], 404);
-        }
-
-        $blog->update($blogData);
-
-
-        return response()->json(['ffff']);
-    }
-
-
-
-
 }
-
-
