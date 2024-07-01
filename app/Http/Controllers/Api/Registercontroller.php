@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Hash;
 class Registercontroller extends Controller
 {
     public function register(Request $request){
-    //   $user = User::get();
-    //   return response( $user);
+    
         $registerUserData = $request->validate([
             'name'=>'required|string',
             'lastname' =>'required|string',
@@ -19,7 +18,7 @@ class Registercontroller extends Controller
             'password'=>'required|min:8',
 
         ]);
-        
+
         $user = User::create([
             'name' => $registerUserData['name'],
             'lastname' => $registerUserData['lastname'],

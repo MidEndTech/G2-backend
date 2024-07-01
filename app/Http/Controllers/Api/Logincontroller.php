@@ -14,6 +14,7 @@ class Logincontroller extends Controller
             'email'=>'required|string|email',
             'password'=>'required|min:8'
         ]);
+        
         $user = User::where('email',$UserData['email'])->first();
         if(!$user || !Hash::check($UserData['password'],$user->password)){
             return response()->json([
