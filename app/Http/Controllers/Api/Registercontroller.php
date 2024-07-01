@@ -19,6 +19,7 @@ class Registercontroller extends Controller
             'password'=>'required|min:8',
 
         ]);
+        
         $user = User::create([
             'name' => $registerUserData['name'],
             'lastname' => $registerUserData['lastname'],

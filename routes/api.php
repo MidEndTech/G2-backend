@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\Logincontroller;
-use App\Http\Controllers\Api\Registercontroller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserAuthController;
+use App\Http\Controllers\Api\Logincontroller;
+use App\Http\Controllers\Blog\Blogcontroller;
+use App\Http\Controllers\Api\Registercontroller;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,10 +18,16 @@ use App\Http\Controllers\UserAuthController;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+
 Route::post('register',[Registercontroller::class,'register']);
 Route::post('login', [Logincontroller::class , 'login']);
+Route::get('index' , [Blogcontroller::class , 'index']);
 
-
+Route::middleware('auth:sanctum')->group(
+     function () {
+        // store blog
+        Route::post('store', [Blogcontroller::class, 'store']);
+        Route::get('show/{id}' , [Blogcontroller::class , 'show']);
+        Route::post('edit/{id}' , [Blogcontroller::class , 'edit']);
+    }
+);
