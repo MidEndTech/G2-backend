@@ -6,6 +6,7 @@ use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\Api\Logincontroller;
 use App\Http\Controllers\Blog\Blogcontroller;
 use App\Http\Controllers\Api\Registercontroller;
+use App\Http\Controllers\Likecontroller;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,9 +28,11 @@ Route::middleware('auth:sanctum')->group(
      function () {
         // store blog
         Route::post('store', [Blogcontroller::class, 'store']);
-        Route::post('edit/{blog}' , [Blogcontroller::class , 'edit']);
-        Route::post('delete/{blog}',[Blogcontroller::class , 'delete'] );
-
-        Route::get('show/{blog}' , [Blogcontroller::class , 'show']);
+        Route::get('show/{id}' , [Blogcontroller::class , 'show']);
+        Route::post('edit/{id}' , [Blogcontroller::class , 'edit']);
+        Route::post('delete/{id}',[Blogcontroller::class , 'delete'] );
+        //like blog
+        Route::post('/like/{id}', [LikeController::class, 'likeBlog']);
+        Route::post('/unlike/{id}', [LikeController::class, 'unlikeBlog']);
     }
 );
