@@ -14,6 +14,9 @@ class BlogReesource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'subject' => $this->subject,
+            'content' =>$this->content
+        ];
     }
 }
