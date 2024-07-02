@@ -13,18 +13,15 @@ class Blogcontroller extends Controller
 
     public function index()
     {
-        $blog = Blog::get();
+        $blog = Blog::orderByDesc('created_at')->get();
         return response()->json([
+            'message' => 'Blog posts retrieved successfully.',
             'data' => $blog,
-        ]);
+        ],200);
     }
+
     public function store(BlogRequest $request)
     {
-
-        // $request->validate([
-        //     'subject' => 'required',
-        //     'content' => 'required'
-        // ]);
         $validatedata=$request->validated();
 
         $userId = auth()->id();
@@ -58,9 +55,10 @@ class Blogcontroller extends Controller
 
 
         return response()->json([
+            'message' => 'the blog apdeated sucssefuly!',
             'data' => $blog,
-            'message' => 'the blog apdeated sucssefuly!'
-        ]);
+
+        ], 200);
     }
 
 
