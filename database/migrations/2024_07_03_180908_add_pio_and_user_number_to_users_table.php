@@ -12,15 +12,17 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('pio', 500)->nullable();
-            $table->string('user_number', 13)->nullable(); 
+            $table->string('pio')->nullable()->change();
+            $table->string('user_number')->nullable()->change();
         });
     }
     
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['pio', 'user_number']);
+            $table->string('pio')->nullable(false)->change();
+            $table->string('user_number')->nullable(false)->change();
         });
     }
+    
 };    
