@@ -6,79 +6,102 @@ use App\Models\Blog;
 use Illuminate\Http\Request;
 use App\Http\Requests\BlogRequest;
 use App\Http\Controllers\Controller;
-
+use App\Http\Resources\BlogReesource;
+use App\Http\Traits\ApiHandler;
 class Blogcontroller extends Controller
 {
 
+    use ApiHandler;
 
     public function index()
     {
-        $blog = Blog::get();
-        return response()->json([
-            'data' => $blog,
-        ]);
+        $blog =BlogReesource::collection(Blog::orderByDesc('created_at')->get()) ;
+        return $this->successMessage( $blog, 'Blog retrieved successfuly!');
     }
+
+
+
     public function store(BlogRequest $request)
     {
+        if (!auth()->check()) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
 
-        // $request->validate([
-        //     'subject' => 'required',
-        //     'content' => 'required'
-        // ]);
         $validatedata=$request->validated();
 
+        //// Get the authenticated user's ID
         $userId = auth()->id();
 
-        $blog = Blog::create([
+         $blog = Blog::create([
             'user_id' => $userId,
             'subject' => $validatedata['subject'],
             'content' => $validatedata['content']
         ]);
 
-        return response()->json([
-            'message' => 'the blog created sucssefuly!',
-            'data' => $blog
-        ], 201);
+        return $this->successMessage(new BlogReesource($blog), 'Blog stored successfuly!');
+
     }
 
 
-    public function edit(BlogRequest $request, $id)
+    public function edit(BlogRequest $request, Blog $blog)
     {
+        $validatedata = $request->validated();
 
-        $validatedata=$request->validated();
+        // $userId = auth()->id();
 
-        $userId = auth()->id();
-        $blog = Blog::where('id', $id)->where('user_id', $userId)->first();
-
-        if (!$blog) {
-            return response()->json(['Not Found'], 404);
+        if (!auth()->check()) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
         }
 
-        $blog->update( $validatedata);
+        // if (!$blog) {
+        //     return response()->json(
+        //         [
+        //             'message' => 'Not Found'
+        //         ]
+        //     );
+        // }
 
+        if (auth()->id() != $blog->user_id) {
+            return $this->errorMessage('Unauthorized');
+        }
 
-        return response()->json([
-            'data' => $blog,
-            'message' => 'the blog apdeated sucssefuly!'
-        ]);
+        $blog->update($validatedata);
+        return $this->successMessage(new BlogReesource($blog), 'Blog apdeated successfuly!');
     }
 
 
-    public function delete($id)
+    public function delete(Blog $blog)
     {
-
-        $userId = auth()->id();
-        $blog = Blog::where('id', $id)->where('user_id', $userId)->first();
-
-        if (!$blog) {
-            return response()->json(['Not Found'], 404);
+        if (!auth()->check()) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
         }
+
+        if (auth()->id() != $blog->user_id) {
+            return $this->errorMessage('Unauthorized');
+        }
+
 
         $blog->delete();
-        return response()->json([
-            'message' => 'the blog deleted sucssefuly!'
-        ], 200);
+        return $this->successMessage(new BlogReesource($blog), 'The blog was deleted successfully!!');
+
     }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -94,9 +117,7 @@ class Blogcontroller extends Controller
                 'message' => 'Blog not found or you do not have permission to access it.'
             ], 404);
         }
-        return response()->json([
-            'data' => $blog,
-        ]);
+        return new BlogReesource($blog);
     }
 
 
