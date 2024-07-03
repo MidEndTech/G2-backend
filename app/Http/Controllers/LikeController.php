@@ -27,7 +27,7 @@ class LikeController extends Controller
         $like->user_id = $userId;
         $like->blog_id = $blog->id;
         $like->save();
-
+        $blog->increment('likes_count');
         return response()->json(['status' => 'liked']);
     }
 
@@ -42,7 +42,9 @@ class LikeController extends Controller
         $like = Like::where('user_id', $userId)->where('blog_id', $blog->id)->first();
         if ($like) {
             $like->delete();
+            $blog->decrement('likes_count');
             return response()->json(['status' => 'unliked']);
+            
         }
 
         return response()->json(['status' => 'not_found']);

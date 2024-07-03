@@ -18,7 +18,9 @@ class Blogcontroller extends Controller
         $blogs =BlogReesource::collection(Blog::orderByDesc('created_at')->get()) ;
 
         foreach ($blogs as $blog) {
-            $blog->increment('views');
+            $blogModel = Blog::find($blog->id); // الحصول على نموذج البلوق
+            $blogModel->increment('views'); // زيادة عدد المشاهدات
+            $blog->likes_count = $blogModel->likes()->count(); // عدد الإعجابات
         }
 
         return $this->successMessage( $blogs, 'Blog retrieved successfuly!');
