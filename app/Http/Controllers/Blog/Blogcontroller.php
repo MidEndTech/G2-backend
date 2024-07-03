@@ -15,13 +15,13 @@ class Blogcontroller extends Controller
 
     public function index()
     {
-        $blog =BlogReesource::collection(Blog::orderByDesc('created_at')->get()) ;
+        $blogs =BlogReesource::collection(Blog::orderByDesc('created_at')->get()) ;
 
         foreach ($blogs as $blog) {
             $blog->increment('views');
         }
 
-        return $this->successMessage( $blog, 'Blog retrieved successfuly!');
+        return $this->successMessage( $blogs, 'Blog retrieved successfuly!');
     }
 
 
@@ -133,9 +133,9 @@ class Blogcontroller extends Controller
         ->groupBy('blogs.id')
         ->orderByDesc('likes_count')
         ->get();
-        // foreach ($blogs as $blog) {
-        //     Blog::where('id', $blog->id)->increment('views');
-        // }
+        foreach ($blogs as $blog) {
+            Blog::where('id', $blog->id)->increment('views');
+        }
     
         return response()->json([
             'data' => $blogs,
@@ -150,9 +150,8 @@ class Blogcontroller extends Controller
                 $blog->increment('views');
             }
         
-            $blogResources = BlogResource::collection($blogs);
+            return $this->successMessage( $blogs, 'Blog retrieved successfuly!');
         
-            return $this->successMessage($blogResources, 'Blogs retrieved successfully!');
         }
                 
             }
