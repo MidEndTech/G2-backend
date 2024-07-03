@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Logincontroller;
 use App\Http\Controllers\Blog\Blogcontroller;
 use App\Http\Controllers\Api\Registercontroller;
 use App\Http\Controllers\Likecontroller;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,9 @@ use App\Http\Controllers\Likecontroller;
 Route::post('register',[Registercontroller::class,'register']);
 Route::post('login', [Logincontroller::class , 'login']);
 Route::get('index' , [Blogcontroller::class , 'index']);
+Route::get('suggestedFriends', [ProfileController::class, 'getSuggestedFriends']);
+Route::get('blogLike', [Blogcontroller::class, 'byLike']);
+
 
 Route::middleware('auth:sanctum')->group(
      function () {
@@ -34,5 +38,11 @@ Route::middleware('auth:sanctum')->group(
         //like blog
         Route::post('/like/{id}', [LikeController::class, 'likeBlog']);
         Route::post('/unlike/{id}', [LikeController::class, 'unlikeBlog']);
+        //profile
+        Route::get('profile', [ProfileController::class, 'show']);
+        Route::put('updateProfile', [ProfileController::class, 'updateP']);
+
+
+
     }
 );

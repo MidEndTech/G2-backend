@@ -98,4 +98,19 @@ class Blogcontroller extends Controller
             'data' => $blog,
         ]);
     }
+
+
+    public function byLike()
+    {
+        $posts = Blog::leftJoin('likes', 'blogs.id', '=', 'likes.blog_id')
+        ->selectRaw('blogs.*, count(likes.id) as likes_count')
+        ->groupBy('blogs.id')
+        ->orderByDesc('likes_count')
+        ->get();
+
+return response()->json([
+'data' => $posts,
+        ]);
+    }
+
 }
