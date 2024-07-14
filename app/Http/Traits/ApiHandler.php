@@ -18,7 +18,7 @@ trait ApiHandler{
     public function unauthorizMessage()
     {
         return response()->json([
-            'message' => 'Unauthorizellllllllllde'
+            'message' => 'Unauthorizede'
         ],401);
     }
     public function errorMessage($message)
